@@ -15,7 +15,7 @@ export class ListComponent implements OnInit {
   @Input() todoList!: TaskCategory;
   @Output() onCategoryDeleted = new EventEmitter<void>();
   enableAddTask = false;
-  isExpanded: boolean = false;
+  isExpanded: boolean = true;
 
   constructor(
     private alerCtrl: AlertController,
