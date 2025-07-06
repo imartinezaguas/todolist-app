@@ -1,0 +1,7 @@
+<app-search (onSearch)="filterCategories($event)"></app-search>
+
+@for (item of filteredCategories; track $index) {
+<ion-list>
+  <app-list [todoList]="item" (onCategoryDeleted)="refrescarCategorias()"></app-list>
+</ion-list>
+}

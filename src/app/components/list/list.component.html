@@ -1,0 +1,35 @@
+<ion-item-sliding>
+  <ion-item>
+    <ion-label (click)="editCategorie()">{{ todoList.name }}</ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="openModalTask(todoList)" fill="clear">
+        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        fill="clear">
+        <ion-icon
+          slot="icon-only"
+          name="chevron-down-outline">
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <ion-item-options>
+    <ion-item-option (click)="deleteCategory()" color="danger">Delete</ion-item-option>
+  </ion-item-options>
+</ion-item-sliding>
+
+@for (item of todoList.task; track $index) {
+<ion-item-sliding>
+  <ion-item>
+    <ion-checkbox  [checked]="item.complete"
+  (ionChange)="completeTask(item, $event.detail.checked)" labelPlacement="end">{{ item.title }}</ion-checkbox>
+  </ion-item>
+  <ion-item-options>
+    <ion-item-option (click)="deleteTask(item)" color="danger">Delete</ion-item-option>
+  </ion-item-options>
+</ion-item-sliding>
+
+}
