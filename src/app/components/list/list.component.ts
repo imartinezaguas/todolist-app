@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlertController, IonicModule } from '@ionic/angular';
+import { ENABLE_ADD_TASK } from 'src/app/const/config';
 import { TaskCategory } from 'src/app/interface/ITaskBoard';
+import { FeatureFlagServiceService } from 'src/app/services/feature-flag-service.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -12,13 +14,17 @@ import { StorageService } from 'src/app/services/storage.service';
 export class ListComponent implements OnInit {
   @Input() todoList!: TaskCategory;
   @Output() onCategoryDeleted = new EventEmitter<void>();
+  enableAddTask = false;
 
   constructor(
     private alerCtrl: AlertController,
-    private storage: StorageService
+    private storage: StorageService,
+    private featureFlag: FeatureFlagServiceService
   ) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    this.enableAddTask = await this.featureFlag.isFeatureEnabled(ENABLE_ADD_TASK);
+  }
 
   async editCategorie() {
     const alert = await this.alerCtrl.create({

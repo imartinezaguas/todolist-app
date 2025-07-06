@@ -1,0 +1,8 @@
+{
+  "enable_add_task": {
+    "defaultValue": {
+      "value": "false"
+    },
+    "description": "Habilita o deshabilita el botón para añadir tareas"
+  }
+}
