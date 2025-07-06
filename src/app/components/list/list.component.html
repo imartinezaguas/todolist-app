@@ -9,8 +9,12 @@
       </ion-button>
       }
 
-      <ion-button fill="clear">
-        <ion-icon slot="icon-only" name="chevron-down-outline"> ></ion-icon>
+      <ion-button (click)="toggleCategory()" fill="clear">
+        <ion-icon
+          slot="icon-only"
+          name="chevron-down-outline"
+          [name]="isExpanded ? 'chevron-up-outline' : 'chevron-down-outline'"
+        ></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-item>
@@ -22,7 +26,8 @@
   </ion-item-options>
 </ion-item-sliding>
 
-@for (item of todoList.task; track $index) {
+@if(isExpanded){
+   @for (item of todoList.task; track $index) {
 <ion-item-sliding>
   <ion-item>
     <ion-checkbox
@@ -38,5 +43,4 @@
     >
   </ion-item-options>
 </ion-item-sliding>
-
-}
+} }
