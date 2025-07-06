@@ -38,7 +38,7 @@ export class ListsComponent implements OnInit, OnChanges {
   }
 
   async refrescarCategorias() {
-    const categorias = await this.storage.getAllCategories();
-    this.filteredCategories = [...categorias];
+    const categories = await this.storage.getAllCategories();
+    this.filteredCategories = [...categories];
   }
 }

@@ -23,17 +23,19 @@ export class ListComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.enableAddTask = await this.featureFlag.isFeatureEnabled(ENABLE_ADD_TASK);
+    this.enableAddTask = await this.featureFlag.isFeatureEnabled(
+      ENABLE_ADD_TASK
+    );
   }
 
   async editCategorie() {
     const alert = await this.alerCtrl.create({
-      header: 'Editar Categoría',
+      header: 'Edit Category',
       inputs: [
         {
           name: 'newName',
           type: 'text',
-          placeholder: 'Nuevo nombre',
+          placeholder: 'New name',
           value: this.todoList.name,
         },
       ],
@@ -45,35 +47,28 @@ export class ListComponent implements OnInit {
         {
           text: 'Guardar',
           handler: async (data) => {
-            const nuevoNombre = data.newName.trim().toUpperCase();
+            const newName = data.newName.trim().toUpperCase();
 
-            if (!nuevoNombre || nuevoNombre === this.todoList.name) return;
+            if (!newName || newName === this.todoList.name) return;
 
-            // Verificar si ya existe una categoría con ese nombre
-            const existe = await this.storage.getCategory(nuevoNombre);
-            if (existe) {
+            const exist = await this.storage.getCategory(newName);
+            if (exist) {
               const existsAlert = await this.alerCtrl.create({
                 header: 'Error',
-                message: `Ya existe una categoría con el nombre "${nuevoNombre}"`,
+                message: `Don't exists that category "${newName}"`,
                 buttons: ['OK'],
               });
               await existsAlert.present();
               return;
             }
 
-            // Obtener categoría actual
-            const categoria = await this.storage.getCategory(
-              this.todoList.name
-            );
+            const category = await this.storage.getCategory(this.todoList.name);
 
-            // Asignar nuevo nombre y guardar
-            categoria.name = nuevoNombre;
-            await this.storage.saveCategory(nuevoNombre, categoria);
+            category.name = newName;
+            await this.storage.saveCategory(newName, category);
 
-            // Eliminar la vieja categoría
             await this.storage.removeCategory(this.todoList.name);
 
-            // Emitir evento al padre para que refresque
             this.onCategoryDeleted.emit();
           },
         },
@@ -92,7 +87,7 @@ export class ListComponent implements OnInit {
         {
           name: 'key',
           type: 'text',
-          placeholder: 'Name Of Task',
+          placeholder: 'Name of task',
         },
       ],
       buttons: [
@@ -101,7 +96,7 @@ export class ListComponent implements OnInit {
           role: 'cancel',
           cssClass: 'primary',
           handler: () => {
-            console.log('Confirm Cancel');
+            console.log('Confirm cancel');
           },
         },
         {
@@ -134,49 +129,43 @@ export class ListComponent implements OnInit {
     await task.present();
   }
 
-  async completeTask(tarea: any, estado: boolean) {
-    // Buscar la categoría actual desde storage
-    const categoria = await this.storage.getCategory(this.todoList.name);
+  async completeTask(task: any, status: boolean) {
+    const category = await this.storage.getCategory(this.todoList.name);
 
-    // Buscar la tarea por ID y actualizar el estado
-    const tareaIndex = categoria.task.findIndex((t) => t.id === tarea.id);
+    const tareaIndex = category.task.findIndex((t) => t.id === task.id);
     if (tareaIndex > -1) {
-      categoria.task[tareaIndex].complete = estado;
-      await this.storage.saveCategory(this.todoList.name, categoria);
+      category.task[tareaIndex].complete = status;
+      await this.storage.saveCategory(this.todoList.name, category);
 
-      // Actualizar la lista local para reflejar en pantalla
-      this.todoList.task = [...categoria.task];
+      this.todoList.task = [...category.task];
     }
   }
 
-  async deleteTask(tarea: any) {
-    const categoria = await this.storage.getCategory(this.todoList.name);
+  async deleteTask(task: any) {
+    const category = await this.storage.getCategory(this.todoList.name);
 
-    // Filtrar tareas eliminando la seleccionada
-    categoria.task = categoria.task.filter((t) => t.id !== tarea.id);
+    category.task = category.task.filter((t) => t.id !== task.id);
 
-    // Guardar la categoría actualizada
-    await this.storage.saveCategory(this.todoList.name, categoria);
+    await this.storage.saveCategory(this.todoList.name, category);
 
-    // Refrescar la UI
-    this.todoList.task = [...categoria.task];
+    this.todoList.task = [...category.task];
   }
 
   async deleteCategory() {
     const alert = await this.alerCtrl.create({
-      header: 'Eliminar categoría',
-      message: `¿Seguro que deseas eliminar la categoría "${this.todoList.name}"?`,
+      header: 'Delete category',
+      message: `¿Surely you want to delete the category "${this.todoList.name}"?`,
       buttons: [
         {
           text: 'Cancelar',
           role: 'cancel',
         },
         {
-          text: 'Eliminar',
+          text: 'Delete',
           role: 'destructive',
           handler: async () => {
             await this.storage.removeCategory(this.todoList.name);
-            this.onCategoryDeleted.emit(); // Notifica al padre que refresque
+            this.onCategoryDeleted.emit();
           },
         },
       ],

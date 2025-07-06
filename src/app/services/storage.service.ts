@@ -21,7 +21,7 @@ export class StorageService {
   }
 
   async saveCategory(name: string, addCategoryTask?: TaskCategory) {
-    console.log("addCategoryTask")
+
     await this.ensureStorageReady();
 
     let newCategory: TaskCategory;
@@ -38,7 +38,6 @@ export class StorageService {
       };
     }
 
-    console.log(newCategory)
     await this._storage?.set(name, newCategory);
   }
 
@@ -50,16 +49,16 @@ export class StorageService {
   async getAllCategories(): Promise<TaskCategory[]> {
     await this.ensureStorageReady();
     const keys = (await this._storage?.keys()) ?? [];
-    const categorias: TaskCategory[] = [];
+    const category: TaskCategory[] = [];
     for (const key of keys) {
       const categoria = await this._storage?.get(key) as TaskCategory;
 
       if (categoria) {
-        categorias.push(categoria);
+        category.push(categoria);
       }
     }
 
-    return categorias;
+    return category;
   }
 
 
