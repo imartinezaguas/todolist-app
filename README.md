@@ -9,13 +9,13 @@ Aplicación desarrollada con **Ionic + Angular**, diseñada para gestionar lista
 ## 📸 Captura de pantalla
 
 ### Vista 1
-![Imagen 1](src/assets/image/Img1.png)
+![Imagen 1](src/assets/image/Imag1.png)
 
 ### Vista 2
-![Imagen 2](src/assets/image/Img2.png)
+![Imagen 2](src/assets/image/Imag2.png)
 
 ### Vista 3
-![Imagen 3](src/assets/image/Img3.png)
+![Imagen 3](src/assets/image/img3.png)
 
 ### Vista 4
 ![Imagen 4](src/assets/image/Img4.png)
