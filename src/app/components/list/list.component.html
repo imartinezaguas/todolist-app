@@ -1,6 +1,6 @@
 <ion-item-sliding>
   <ion-item>
-    <ion-label (click)="editCategorie()">{{ todoList.name }}</ion-label>
+    <ion-label>{{ todoList.name }}</ion-label>
 
     <ion-buttons slot="end">
       @if (enableAddTask) {
@@ -8,6 +8,10 @@
         <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
       </ion-button>
       }
+
+      <ion-button (click)="editCategorie()">
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
 
       <ion-button (click)="toggleCategory()" fill="clear">
         <ion-icon
@@ -26,8 +30,7 @@
   </ion-item-options>
 </ion-item-sliding>
 
-@if(isExpanded){
-   @for (item of todoList.task; track $index) {
+@if(isExpanded){ @for (item of todoList.task; track $index) {
 <ion-item-sliding>
   <ion-item>
     <ion-checkbox

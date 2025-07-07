@@ -98,6 +98,10 @@ export const environment = {
 };
 \`\`\`
 
+## 🎥 Demostración de cómo el feature flag afecta la funcionalidad de la aplicación
+
+👉 [Haz clic aquí para ver el video](https://youtu.be/yfvSrDuhPsU)
+
 
 ## 📄 Licencia
 

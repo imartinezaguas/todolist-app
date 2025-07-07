@@ -1,3 +1,16 @@
+/**
+ * Componente HomePage
+ *
+ * Página principal de la aplicación. Permite visualizar las categorías de tareas
+ * almacenadas localmente y añadir nuevas categorías mediante un modal de entrada.
+ *
+ * @example
+ * <app-home></app-home>
+ *
+ * @author Ivan
+ * @since 2025-07-07
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { TaskCategory } from '../interface/ITaskBoard';
 import { AlertController } from '@ionic/angular';
@@ -10,6 +23,9 @@ import { StorageService } from '../services/storage.service';
   standalone: false,
 })
 export class HomePage implements OnInit {
+  /**
+   * Lista de categorías de tareas que se muestran en pantalla.
+   */
   public todoList: TaskCategory[] = [];
 
   constructor(
@@ -17,11 +33,20 @@ export class HomePage implements OnInit {
     private storage: StorageService
   ) {}
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar la página.
+   * Carga todas las categorías almacenadas localmente.
+   */
   async ngOnInit(): Promise<void> {
     this.todoList = await this.storage.getAllCategories();
   }
 
-  async openModalCategory() {
+  /**
+   * Abre un modal para agregar una nueva categoría.
+   * Si el usuario introduce un nombre válido, se guarda la categoría
+   * y se actualiza la lista mostrada.
+   */
+  async openModalCategory(): Promise<void> {
     const category = await this.alerCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Add Category',
@@ -38,7 +63,7 @@ export class HomePage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'primary',
-          handler: () => {},
+          handler: () => {}, // Acción vacía al cancelar
         },
         {
           text: 'Save',
@@ -46,7 +71,7 @@ export class HomePage implements OnInit {
             const nameCategory = data.key.trim().toUpperCase();
 
             if (nameCategory) {
-
+              // Guarda la nueva categoría y recarga la lista
               await this.storage.saveCategory(nameCategory);
               this.todoList = await this.storage.getAllCategories();
             }

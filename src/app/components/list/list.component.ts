@@ -1,3 +1,20 @@
+/**
+ * Componente ListComponent
+ *
+ * Representa una sola categoría de tareas dentro de la vista de listas.
+ * Permite editar el nombre de la categoría, agregar nuevas tareas,
+ * completar/eliminar tareas, y eliminar la categoría completa.
+ *
+ * También controla si la funcionalidad "Agregar tarea" está habilitada a través
+ * de una bandera remota con Firebase Remote Config.
+ *
+ * @example
+ * <app-list [todoList]="categoria" (onCategoryDeleted)="refrescarCategorias()"></app-list>
+ *
+ * @author Ivan
+ * @since 2025-07-07
+ */
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlertController, IonicModule } from '@ionic/angular';
 import { ENABLE_ADD_TASK } from 'src/app/const/config';
@@ -12,9 +29,24 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./list.component.scss'],
 })
 export class ListComponent implements OnInit {
+  /**
+   * Categoría de tareas que se va a renderizar.
+   */
   @Input() todoList!: TaskCategory;
+
+  /**
+   * Evento emitido cuando se elimina una categoría.
+   */
   @Output() onCategoryDeleted = new EventEmitter<void>();
+
+  /**
+   * Bandera que indica si la funcionalidad de agregar tarea está habilitada.
+   */
   enableAddTask = false;
+
+  /**
+   * Controla la visibilidad de las tareas dentro de la categoría.
+   */
   isExpanded: boolean = true;
 
   constructor(
@@ -23,12 +55,18 @@ export class ListComponent implements OnInit {
     private featureFlag: FeatureFlagServiceService
   ) {}
 
+  /**
+   * Inicializa el componente y verifica si está habilitada
+   * la funcionalidad para agregar tareas.
+   */
   async ngOnInit() {
-    this.enableAddTask = await this.featureFlag.isFeatureEnabled(
-      ENABLE_ADD_TASK
-    );
+    this.enableAddTask = await this.featureFlag.isFeatureEnabled(ENABLE_ADD_TASK);
   }
 
+  /**
+   * Muestra un modal para editar el nombre de la categoría.
+   * Si el nuevo nombre no existe ya, actualiza la categoría y elimina la antigua.
+   */
   async editCategorie() {
     const alert = await this.alerCtrl.create({
       header: 'Edit Category',
@@ -64,10 +102,9 @@ export class ListComponent implements OnInit {
             }
 
             const category = await this.storage.getCategory(this.todoList.name);
-
             category.name = newName;
-            await this.storage.saveCategory(newName, category);
 
+            await this.storage.saveCategory(newName, category);
             await this.storage.removeCategory(this.todoList.name);
 
             this.onCategoryDeleted.emit();
@@ -79,6 +116,12 @@ export class ListComponent implements OnInit {
     await alert.present();
   }
 
+  /**
+   * Muestra un modal para agregar una nueva tarea a la categoría actual.
+   * La tarea se guarda solo si el título no está vacío.
+   *
+   * @param category - Categoría a la que se agregará la tarea.
+   */
   async openModalTask(category: TaskCategory) {
     const task = await this.alerCtrl.create({
       cssClass: 'my-custom-class',
@@ -105,9 +148,7 @@ export class ListComponent implements OnInit {
           handler: async (data) => {
             const title = data.key.trim().toLowerCase();
 
-            const catStorage: TaskCategory = await this.storage.getCategory(
-              category.name
-            );
+            const catStorage = await this.storage.getCategory(category.name);
 
             if (title) {
               const newTask = {
@@ -130,6 +171,12 @@ export class ListComponent implements OnInit {
     await task.present();
   }
 
+  /**
+   * Marca una tarea como completa o incompleta y actualiza el almacenamiento.
+   *
+   * @param task - Objeto de la tarea a actualizar.
+   * @param status - Estado de completado (true/false).
+   */
   async completeTask(task: any, status: boolean) {
     const category = await this.storage.getCategory(this.todoList.name);
 
@@ -142,16 +189,24 @@ export class ListComponent implements OnInit {
     }
   }
 
+  /**
+   * Elimina una tarea específica de la categoría.
+   *
+   * @param task - Objeto de la tarea a eliminar.
+   */
   async deleteTask(task: any) {
     const category = await this.storage.getCategory(this.todoList.name);
 
     category.task = category.task.filter((t) => t.id !== task.id);
 
     await this.storage.saveCategory(this.todoList.name, category);
-
     this.todoList.task = [...category.task];
   }
 
+  /**
+   * Muestra una alerta para confirmar la eliminación de la categoría completa.
+   * Si se confirma, la elimina del almacenamiento y emite el evento correspondiente.
+   */
   async deleteCategory() {
     const alert = await this.alerCtrl.create({
       header: 'Delete category',
@@ -175,8 +230,10 @@ export class ListComponent implements OnInit {
     await alert.present();
   }
 
+  /**
+   * Alterna la expansión o colapso visual de las tareas de la categoría.
+   */
   toggleCategory() {
     this.isExpanded = !this.isExpanded;
   }
-
 }
