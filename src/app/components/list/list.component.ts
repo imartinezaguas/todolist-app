@@ -103,7 +103,7 @@ export class ListComponent implements OnInit {
         {
           text: 'Save',
           handler: async (data) => {
-            const title = data.key.trim();
+            const title = data.key.trim().toLowerCase();
 
             const catStorage: TaskCategory = await this.storage.getCategory(
               category.name
