@@ -41,26 +41,6 @@ Aplicación desarrollada con **Ionic + Angular**, diseñada para gestionar lista
 - 🔄 Feature Flags (activar o desactivar funcionalidades dinámicamente desde Firebase)
 - 🚀 Optimización de rendimiento (carga eficiente de datos, suscripciones limpias, trackBy)
 
-## 📂 Estructura del proyecto
-
-\`\`\`
-src/
-│
-├── app/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   └── interface/
-│
-├── assets/
-│   └── icon/
-│
-├── environments/
-│   └── environment.prod.ts
-│
-└── index.html
-\`\`\`
-
 ## 🛠️ Instalación y ejecución local
 
 \`\`\`bash
