@@ -13,7 +13,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { TaskCategory } from '../interface/ITaskBoard';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { StorageService } from '../services/storage.service';
 
 @Component({
@@ -27,10 +27,12 @@ export class HomePage implements OnInit {
    * Lista de categorías de tareas que se muestran en pantalla.
    */
   public todoList: TaskCategory[] = [];
+  fechaRecordatorio: string = '';
 
   constructor(
     private alerCtrl: AlertController,
-    private storage: StorageService
+    private storage: StorageService,
+    private toastCtrl: ToastController
   ) {}
 
   /**
@@ -82,4 +84,6 @@ export class HomePage implements OnInit {
 
     await category.present();
   }
+
+
 }

@@ -1,22 +1,16 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      TodoList
-    </ion-title>
+    <ion-title> TodoList </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-<app-lists [todoLists]="todoList"></app-lists>
+  <app-lists [todoLists]="todoList"></app-lists>
 
-  <ion-fab
-    vertical="bottom"
-    horizontal="end"
-    slot="fixed">
-    <ion-fab-button (click)="openModalCategory()" >
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openModalCategory()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 </ion-content>
