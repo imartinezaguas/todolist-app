@@ -39,7 +39,7 @@ Aplicación desarrollada con **Ionic + Angular**, diseñada para gestionar lista
 - 🔁 Marcar tareas como completas
 - 🧹 Eliminar tareas y categorías
 - 🔄 Feature Flags (activar o desactivar funcionalidades dinámicamente desde Firebase)
-- 🚀 Optimización de rendimiento (carga eficiente de datos, suscripciones limpias, trackBy)
+- 🚀 Optimización de rendimiento (carga eficiente de datos,*ngFor, ngIf, lazyload,Cacheo de llamadas a Remote Config)
 
 ## 🛠️ Instalación y ejecución local
 

@@ -13,7 +13,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { TaskCategory } from '../interface/ITaskBoard';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { StorageService } from '../services/storage.service';
 
 @Component({
@@ -32,7 +32,6 @@ export class HomePage implements OnInit {
   constructor(
     private alerCtrl: AlertController,
     private storage: StorageService,
-    private toastCtrl: ToastController
   ) {}
 
   /**
