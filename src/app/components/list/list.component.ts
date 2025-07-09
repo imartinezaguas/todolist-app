@@ -131,7 +131,6 @@ export class ListComponent implements OnInit {
     const category = await this.storage.getCategory(this.todoList.name);
 
     category.task = category.task.filter((t) => t.id !== task.id);
-    console.log(category.task)
     await this.storage.saveCategory(this.todoList.name, category);
     this.todoList.task = [...category.task];
     await this.slidingItem.closeOpened();

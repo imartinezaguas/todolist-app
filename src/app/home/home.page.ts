@@ -15,6 +15,7 @@ import { Component, OnInit } from '@angular/core';
 import { TaskCategory } from '../interface/ITaskBoard';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from '../services/storage.service';
+import { TaskServiceService } from '../services/task-service.service';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ export class HomePage implements OnInit {
   constructor(
     private alerCtrl: AlertController,
     private storage: StorageService,
+    private taskService: TaskServiceService
   ) {}
 
   /**
@@ -39,7 +41,11 @@ export class HomePage implements OnInit {
    * Carga todas las categorías almacenadas localmente.
    */
   async ngOnInit(): Promise<void> {
-    this.todoList = await this.storage.getAllCategories();
+    //this.todoList = await this.storage.getAllCategories();
+    this.taskService.loadCategory().subscribe(ref => {
+      this.todoList = ref
+    })
+
   }
 
   /**
