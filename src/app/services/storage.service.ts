@@ -49,7 +49,10 @@ export class StorageService {
    * @param addCategoryTask - Objeto `TaskCategory` a guardar. Si no se proporciona,
    *                          se crea uno nuevo con el nombre y un ID generado.
    */
-  async saveCategory(name: string, addCategoryTask?: TaskCategory): Promise<void> {
+  async saveCategory(
+    name: string,
+    addCategoryTask?: TaskCategory
+  ): Promise<void> {
     await this.ensureStorageReady();
 
     let newCategory: TaskCategory;
@@ -90,7 +93,7 @@ export class StorageService {
     const categories: TaskCategory[] = [];
 
     for (const key of keys) {
-      const categoria = await this._storage?.get(key) as TaskCategory;
+      const categoria = (await this._storage?.get(key)) as TaskCategory;
 
       if (categoria) {
         categories.push(categoria);
@@ -108,5 +111,14 @@ export class StorageService {
   async removeCategory(name: string): Promise<void> {
     await this.ensureStorageReady();
     await this._storage?.remove(name);
+  }
+
+  async editNameCategory(oldKey: string, newKey: string): Promise<void> {
+    const value = await this.getCategory(oldKey);
+    if (value !== null) {
+      value.name = newKey
+      await this.storage.set(newKey, value);
+      await this.storage.remove(oldKey);
+    }
   }
 }

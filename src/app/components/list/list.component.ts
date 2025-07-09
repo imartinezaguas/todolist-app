@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AlertController, IonicModule } from '@ionic/angular';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AlertController, IonicModule, IonItemSliding } from '@ionic/angular';
 import { ENABLE_ADD_TASK } from 'src/app/const/config';
 import { TaskCategory } from 'src/app/interface/ITaskBoard';
 import { FeatureFlagServiceService } from 'src/app/services/feature-flag-service.service';
@@ -13,7 +13,9 @@ import { StorageService } from 'src/app/services/storage.service';
 })
 export class ListComponent implements OnInit {
   @Input() todoList!: TaskCategory;
-  @Output() onCategoryDeleted = new EventEmitter<void>();
+  @Output() categoryDeleted = new EventEmitter<number>();
+  @ViewChild(IonItemSliding) slidingItem!: IonItemSliding;
+  @ViewChild(IonItemSliding) slidingRefCat!: IonItemSliding;
   enableAddTask = false;
   isExpanded: boolean = true;
 
@@ -42,35 +44,18 @@ export class ListComponent implements OnInit {
       ],
       buttons: [
         {
-          text: 'Cancelar',
+          text: 'Cancel',
           role: 'cancel',
         },
         {
-          text: 'Guardar',
+          text: 'Save',
           handler: async (data) => {
             const newName = data.newName.trim().toUpperCase();
 
-            if (!newName || newName === this.todoList.name) return;
+            if (!newName) return;
 
-            const exist = await this.storage.getCategory(newName);
-            if (exist) {
-              const existsAlert = await this.alerCtrl.create({
-                header: 'Error',
-                message: `Don't exists that category "${newName}"`,
-                buttons: ['OK'],
-              });
-              await existsAlert.present();
-              return;
-            }
-
-            const category = await this.storage.getCategory(this.todoList.name);
-
-            category.name = newName;
-            await this.storage.saveCategory(newName, category);
-
-            await this.storage.removeCategory(this.todoList.name);
-
-            this.onCategoryDeleted.emit();
+            this.storage.editNameCategory(this.todoList.name,newName)
+            this.todoList.name = newName;
           },
         },
       ],
@@ -146,10 +131,10 @@ export class ListComponent implements OnInit {
     const category = await this.storage.getCategory(this.todoList.name);
 
     category.task = category.task.filter((t) => t.id !== task.id);
-
+    console.log(category.task)
     await this.storage.saveCategory(this.todoList.name, category);
-
     this.todoList.task = [...category.task];
+    await this.slidingItem.closeOpened();
   }
 
   async deleteCategory() {
@@ -165,8 +150,10 @@ export class ListComponent implements OnInit {
           text: 'Delete',
           role: 'destructive',
           handler: async () => {
+
             await this.storage.removeCategory(this.todoList.name);
-            this.onCategoryDeleted.emit();
+            this.categoryDeleted.emit(this.todoList.id);
+            await this.slidingRefCat.closeOpened();
           },
         },
       ],
@@ -174,6 +161,7 @@ export class ListComponent implements OnInit {
 
     await alert.present();
   }
+
 
   toggleCategory() {
     this.isExpanded = !this.isExpanded;

@@ -2,6 +2,6 @@
 
 @for (item of filteredCategories; track $index) {
 <ion-list>
-  <app-list [todoList]="item" (onCategoryDeleted)="refrescarCategorias()"></app-list>
+  <app-list [todoList]="item" (categoryDeleted)="refrescarCategorias()"></app-list>
 </ion-list>
 }
