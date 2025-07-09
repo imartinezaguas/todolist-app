@@ -16,6 +16,7 @@ import { TaskCategory } from '../interface/ITaskBoard';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from '../services/storage.service';
 import { TaskServiceService } from '../services/task-service.service';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -40,12 +41,11 @@ export class HomePage implements OnInit {
    * Método del ciclo de vida que se ejecuta al inicializar la página.
    * Carga todas las categorías almacenadas localmente.
    */
-  async ngOnInit(): Promise<void> {
+  async ngOnInit() {
     //this.todoList = await this.storage.getAllCategories();
-    this.taskService.loadCategory().subscribe(ref => {
-      this.todoList = ref
-    })
-
+    this.taskService.loadCategory().subscribe((ref) => {
+      this.todoList = ref;
+    });
   }
 
   /**
@@ -70,7 +70,7 @@ export class HomePage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'primary',
-          handler: () => {}, // Acción vacía al cancelar
+          handler: () => {},
         },
         {
           text: 'Save',
@@ -79,8 +79,18 @@ export class HomePage implements OnInit {
 
             if (nameCategory) {
               // Guarda la nueva categoría y recarga la lista
-              await this.storage.saveCategory(nameCategory);
-              this.todoList = await this.storage.getAllCategories();
+              //await this.storage.saveCategory(nameCategory);
+              //this.todoList = await this.storage.getAllCategories();
+              this.taskService.saveCategory(nameCategory).subscribe({
+                next: () => {
+                  this.taskService.loadCategory().subscribe((ref) => {
+                    this.todoList = ref;
+                  });
+                },
+                error: (err) => {
+                  throw new Error(err)
+                },
+              });
             }
           },
         },
@@ -89,6 +99,4 @@ export class HomePage implements OnInit {
 
     await category.present();
   }
-
-
 }
