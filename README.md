@@ -20,6 +20,14 @@ Aplicación desarrollada con **Ionic + Angular**, diseñada para gestionar lista
 ### Vista 4
 ![Imagen 4](src/assets/image/Img4.png)
 
+### Vista 5
+![Imagen 3](src/assets/image/blanco.png.png)
+
+### Vista 6
+![Imagen 4](src/assets/image/negro.png.png)
+
+
+
 ## ⚙️ Tecnologías utilizadas
 
 - Ionic Framework
@@ -41,6 +49,7 @@ Aplicación desarrollada con **Ionic + Angular**, diseñada para gestionar lista
 - 🔄 Feature Flags (activar o desactivar funcionalidades dinámicamente desde Firebase)
 - 🚀 Optimización de rendimiento (carga eficiente de datos,*ngFor, ngIf, lazyload,Cacheo de llamadas a Remote Config)
 - 🔥 Mejora en el servicio de storage con observables
+- 📄 Funcionalidad adicional Dark Mode
 
 ## 🛠️ Instalación y ejecución local
 

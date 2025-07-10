@@ -1,2 +1,25 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
+:root {
+  --ion-background-color: var(--ion-color-light);
+  --ion-text-color: var(--ion-color-dark);
+}
+
+body.dark {
+  --ion-background-color: var(--ion-color-dark);
+  --ion-text-color: var(--ion-color-light);
+}
+
+.my-custom-class {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
+}
+
+.my-custom-class .alert-title,
+.my-custom-class .alert-input,
+.my-custom-class .alert-button {
+  color: var(--ion-text-color);
+}
+
+.my-custom-class .alert-input {
+  background-color: var(--ion-item-background);
+}
+

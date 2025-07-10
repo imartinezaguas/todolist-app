@@ -1,6 +1,9 @@
-<ion-header [translucent]="true">
+<ion-header color="" [translucent]="true">
   <ion-toolbar>
     <ion-title> TodoList </ion-title>
+      <ion-button slot="end" (click)="toggleTheme()">
+  <ion-icon [name]="isDark ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+</ion-button>
   </ion-toolbar>
 </ion-header>
 

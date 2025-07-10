@@ -16,7 +16,7 @@ import { TaskCategory } from '../interface/ITaskBoard';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from '../services/storage.service';
 import { TaskServiceService } from '../services/task-service.service';
-import { throwError } from 'rxjs';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -30,11 +30,13 @@ export class HomePage implements OnInit {
    */
   public todoList: TaskCategory[] = [];
   fechaRecordatorio: string = '';
+  isDark = false;
 
   constructor(
     private alerCtrl: AlertController,
     private storage: StorageService,
-    private taskService: TaskServiceService
+    private taskService: TaskServiceService,
+    private themeService: ThemeService
   ) {}
 
   /**
@@ -46,6 +48,7 @@ export class HomePage implements OnInit {
     this.taskService.loadCategory().subscribe((ref) => {
       this.todoList = ref;
     });
+    this.isDark = localStorage.getItem('theme') === 'dark';
   }
 
   /**
@@ -88,7 +91,7 @@ export class HomePage implements OnInit {
                   });
                 },
                 error: (err) => {
-                  throw new Error(err)
+                  throw new Error(err);
                 },
               });
             }
@@ -98,5 +101,10 @@ export class HomePage implements OnInit {
     });
 
     await category.present();
+  }
+
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    this.themeService.toggleTheme();
   }
 }
