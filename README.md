@@ -21,10 +21,10 @@ Aplicación desarrollada con **Ionic + Angular**, diseñada para gestionar lista
 ![Imagen 4](src/assets/image/Img4.png)
 
 ### Vista 5
-![Imagen 3](src/assets/image/blanco.png.png)
+![Imagen 5](src/assets/image/blanco.png.png)
 
 ### Vista 6
-![Imagen 4](src/assets/image/negro.png.png)
+![Imagen 6](src/assets/image/negro.png.png)
 
 
 
