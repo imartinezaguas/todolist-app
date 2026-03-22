@@ -13,6 +13,7 @@ import { TASK_REPOSITORY_TOKEN } from './core/domain/repositories/task-resposito
 import { StorageTaskRepository } from './core/infrastructure/repositories/storage-task.repository';
 import { CATEGORY_REPOSITORY_TOKEN } from './core/domain/repositories/category-repositories';
 import { StorageCategoryRepository } from './core/infrastructure/repositories/storage-category.repository';
+import { SETTINGS as REMOTE_CONFIG_SETTINGS } from '@angular/fire/compat/remote-config';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,9 +25,12 @@ import { StorageCategoryRepository } from './core/infrastructure/repositories/st
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireRemoteConfigModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-        { provide: CATEGORY_REPOSITORY_TOKEN, useClass: StorageCategoryRepository },
-     { provide: TASK_REPOSITORY_TOKEN, useClass: StorageTaskRepository }
+  providers: [
+    // Es una abstracción/clase base que Angular Router usa para decidir si debe reutilizar componentes/rutas o destruirlos al navegar.
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: CATEGORY_REPOSITORY_TOKEN, useClass: StorageCategoryRepository },
+    { provide: TASK_REPOSITORY_TOKEN, useClass: StorageTaskRepository },
+    { provide: REMOTE_CONFIG_SETTINGS, useValue: { minimumFetchIntervalMillis: 10000 } }
   ],
   bootstrap: [AppComponent],
 })

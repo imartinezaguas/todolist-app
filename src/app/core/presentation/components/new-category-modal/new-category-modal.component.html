@@ -1,42 +1,61 @@
-<ion-header translucent>
-  <ion-toolbar>
-    <ion-title>Nueva Categoría</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">Cerrar</ion-button>
+<ion-header class="ion-no-border">
+  <ion-toolbar style="--background: rgba(247, 249, 252, 0.8); backdrop-filter: blur(24px); --border-width: 0;">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()" style="--color: #0960ac; background: #f0f4f8; border-radius: 50%; width: 40px; height: 40px; margin-left: 16px;">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
+    <ion-title style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 1.125rem; color: #0960ac;">Nueva Categoría</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Nombre de la Categoría</ion-label>
-    <ion-input [(ngModel)]="name" placeholder="Ej: Compras, Ideas, Salud"></ion-input>
-  </ion-item>
-
-  <h3>Icono</h3>
-  <div class="icons-grid">
-    <ion-button
-      *ngFor="let ic of icons"
-      [fill]="selectedIcon === ic ? 'solid' : 'clear'"
-      [color]="selectedIcon === ic ? 'primary' : ''"
-      (click)="selectedIcon = ic">
-      <ion-icon [name]="ic"></ion-icon>
-    </ion-button>
+<ion-content class="ion-padding custom-bg">
+  <div class="header-section">
+    <span class="subtitle">ORGANIZACIÓN</span>
+    <h2>Crea un espacio para<br/><span class="text-primary">tus intenciones.</span></h2>
   </div>
 
-  <h3>Color</h3>
-  <div class="colors-grid">
-    <ion-button
-      *ngFor="let c of colors"
-      [color]="c"
-      [fill]="selectedColor === c ? 'solid' : 'outline'"
-      shape="round"
-      (click)="selectedColor = c">
-    </ion-button>
+  <div class="input-section">
+    <label>Nombre de la Categoría</label>
+    <div class="input-wrapper">
+      <input type="text" [(ngModel)]="name" placeholder="Ej. Bienestar, Proyectos..." />
+    </div>
   </div>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="confirm()">
-    Crear Categoría
-  </ion-button>
+  <div class="color-section">
+    <div class="section-header">
+      <label>Seleccionar Color</label>
+      <span class="options-count">{{ colors.length }} opciones</span>
+    </div>
+    <div class="color-grid">
+      <button *ngFor="let c of colors" 
+           class="color-swatch ion-activatable" 
+           [class.active]="selectedColor === c"
+           (click)="selectedColor = c"
+           [attr.aria-label]="c">
+        <div class="swatch-inner" [style.background]="'var(--ion-color-' + c + ')'"></div>
+        <ion-ripple-effect></ion-ripple-effect>
+      </button>
+    </div>
+  </div>
+
+  <div class="icon-section">
+    <label>Elegir Icono</label>
+    <div class="icon-grid">
+      <button *ngFor="let ic of icons" 
+           class="icon-item ion-activatable"
+           [class.active]="selectedIcon === ic"
+           (click)="selectedIcon = ic">
+        <ion-icon [name]="ic"></ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding-top: 16px; padding-bottom: 32px;">
+    <button class="submit-btn" (click)="confirm()">
+      <span>Crear Categoría</span>
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </div>
 </ion-content>
-

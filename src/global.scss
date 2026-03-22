@@ -34,4 +34,77 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */ /* Removed to ensure light design */
+
+/* --- The Sanctuary Redesign --- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+  --ion-font-family: 'Manrope', sans-serif;
+
+  /* Force Light Theme Colors Based on Reference */
+  --ion-color-primary: #0960ac;
+  --ion-color-primary-rgb: 9,96,172;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #085497;
+  --ion-color-primary-tint: #2270b4;
+
+  --ion-background-color: #f7f9fc;
+  --ion-background-color-rgb: 247,249,252;
+  --ion-text-color: #2c3338;
+  --ion-text-color-rgb: 44,51,56;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  overscroll-behavior-x: none; /* Previene la flecha nativa de historial en Chrome/Edge al deslizar */
+}
+
+html {
+  overscroll-behavior-x: none;
+}
+
+/* Base custom styles to make components pop */
+ion-content {
+  --background: var(--ion-background-color);
+}
+
+ion-toolbar {
+  --background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  --border-width: 0;
+  --color: #1d4ed8;
+}
+
+ion-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  font-size: 1.5rem;
+}
+
+ion-searchbar {
+  --background: #ffffff;
+  --color: #2c3338;
+  --placeholder-color: #9a9da0;
+  --border-radius: 12px;
+  --box-shadow: none;
+  border: 1px solid #dce3e9;
+  border-radius: 12px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+ion-fab-button {
+  --background: #508df3; /* A lighter blue to match the reference FAB */
+  --color: #ffffff;
+  --box-shadow: 0 4px 12px rgba(9, 96, 172, 0.2);
+}
+
+h1, h2, h3, h4, strong {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}

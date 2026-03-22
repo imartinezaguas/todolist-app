@@ -3,12 +3,12 @@ import { TASK_REPOSITORY_TOKEN, TaskRepository } from "../../domain/repositories
 import { TodoTask } from "../../domain/entities/task";
 
 @Injectable({ providedIn: 'root' })
-export class ToggleTaskUseCase {
+export class ToggleAllTasksUseCase {
    constructor(
     @Inject(TASK_REPOSITORY_TOKEN) private taskRepo: TaskRepository
   ) {}
 
-  async execute(categoryId: string, index: number): Promise<TodoTask[]> {
-    return this.taskRepo.toggleTask(categoryId, index);
+  async execute(categoryId: string, completed: boolean): Promise<TodoTask[]> {
+    return this.taskRepo.toggleAllTasks(categoryId, completed);
   }
 }

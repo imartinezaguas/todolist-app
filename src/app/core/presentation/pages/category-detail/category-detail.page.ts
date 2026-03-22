@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ToastController, AlertController } from '@ionic/angular';
 import {
   COLOR_DANGER,
   DURATION_TOAST,
@@ -21,12 +21,16 @@ import { AddTaskUseCase } from 'src/app/core/application/task/add-task.usecase';
 import { ToggleTaskUseCase } from 'src/app/core/application/task/toggle-task.usecase';
 import { DeleteTaskUseCase } from 'src/app/core/application/task/delete-task.usecase';
 import { GetTasksByCategoryUseCase } from 'src/app/core/application/task/get-tasks-by-category.usecase';
+import { UpdateTaskUseCase } from 'src/app/core/application/task/update-task.usecase';
+import { DeleteCompletedTasksUseCase } from 'src/app/core/application/task/delete-completed-tasks.usecase';
+import { ToggleAllTasksUseCase } from 'src/app/core/application/task/toggle-all-tasks.usecase';
 
 @Component({
   selector: 'app-category-detail',
   templateUrl: './category-detail.page.html',
   imports: [IonicModule, CommonModule, FormsModule],
   styleUrls: ['./category-detail.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryDetailPage implements OnInit {
   categoryName = '';
@@ -39,13 +43,18 @@ export class CategoryDetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private toastCtrl: ToastController,
+    private alertCtrl: AlertController,
     private featureFlag: FeatureFlagServiceService,
 
     // Inyección de casos de uso
     private getTasksUC: GetTasksByCategoryUseCase,
     private addTaskUC: AddTaskUseCase,
     private toggleTaskUC: ToggleTaskUseCase,
-    private deleteTaskUC: DeleteTaskUseCase
+    private deleteTaskUC: DeleteTaskUseCase,
+    private updateTaskUC: UpdateTaskUseCase,
+    private deleteCompletedTasksUC: DeleteCompletedTasksUseCase,
+    private toggleAllTasksUC: ToggleAllTasksUseCase,
+    private cdr: ChangeDetectorRef
   ) {
     this.categoryName = this.route.snapshot.queryParamMap.get('title') ?? '';
     this.categoryId = this.route.snapshot.paramMap.get('id') ?? '';
@@ -54,10 +63,26 @@ export class CategoryDetailPage implements OnInit {
   async ngOnInit() {
     this.tasks = await this.getTasksUC.execute(this.categoryId);
     this.buttonTaskEnable = await this.featureFlag.isFeatureEnabled(ENABLE_ADD_TASK);
+    this.cdr.markForCheck();
+  }
+
+  trackByTask(index: number, task: TodoTask): string | number {
+    return task.id || task.title;
   }
 
   get completedCount(): number {
     return this.tasks.filter((t) => t.completed).length;
+  }
+
+  get allCompleted(): boolean {
+    return this.tasks.length > 0 && this.completedCount === this.tasks.length;
+  }
+
+  async toggleAll() {
+    const newState = !this.allCompleted;
+    const updatedTasks = await this.toggleAllTasksUC.execute(this.categoryId, newState);
+    this.tasks = updatedTasks;
+    this.cdr.markForCheck();
   }
 
   async addTask() {
@@ -74,17 +99,37 @@ export class CategoryDetailPage implements OnInit {
     console.log(this.categoryName, this.newTask.trim())
     const updatedTasks = await this.addTaskUC.execute(this.categoryId, this.newTask.trim());
     this.tasks = updatedTasks;
+    this.cdr.markForCheck();
     this.newTask = '';
   }
 
-  async toggleTask(task: TodoTask) {
-    const updatedTasks = await this.toggleTaskUC.execute(this.categoryId, task);
+  async toggleTask(index: number) {
+    const updatedTasks = await this.toggleTaskUC.execute(this.categoryId, index);
     this.tasks = updatedTasks;
+    this.cdr.markForCheck();
   }
 
   async deleteTask(index: number) {
-    const updatedTasks = await this.deleteTaskUC.execute(this.categoryId, index);
-    this.tasks = updatedTasks;
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar tarea',
+      message: '¿Estás seguro de que deseas eliminar esta tarea?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: async () => {
+            const updatedTasks = await this.deleteTaskUC.execute(this.categoryId, index);
+            this.tasks = updatedTasks;
+    this.cdr.markForCheck();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   get filteredTasks(): TodoTask[] {
@@ -92,5 +137,59 @@ export class CategoryDetailPage implements OnInit {
     return this.tasks.filter((t) =>
       t.title.toLowerCase().includes(this.searchTask.toLowerCase())
     );
+  }
+
+  async editTask(index: number, task: TodoTask) {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar tarea',
+      inputs: [
+        {
+          name: 'title',
+          type: 'text',
+          value: task.title,
+          placeholder: 'Título de la tarea',
+        },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Guardar',
+          handler: async (data) => {
+            if (!data.title.trim()) return false;
+            const updatedTasks = await this.updateTaskUC.execute(this.categoryId, index, data.title.trim());
+            this.tasks = updatedTasks;
+    this.cdr.markForCheck();
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async deleteCompletedTasks() {
+    if (this.completedCount === 0) return;
+
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar Completadas',
+      message: '¿Estás seguro de que deseas eliminar todas las tareas completadas?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar Todas',
+          role: 'destructive',
+          handler: async () => {
+            const updatedTasks = await this.deleteCompletedTasksUC.execute(this.categoryId);
+            this.tasks = updatedTasks;
+    this.cdr.markForCheck();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

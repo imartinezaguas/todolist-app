@@ -9,7 +9,6 @@ export class AddCategoryUseCase {
   ) {}
 
   async execute(category: Category): Promise<void> {
-    console.log(category)
     await this.categoryRepo.add(category);
   }
 }

@@ -42,9 +42,11 @@ export class NewCategoryModalComponent implements OnInit {
       return;
     }
 
+    const formattedName = this.name.trim().charAt(0).toUpperCase() + this.name.trim().slice(1);
+
     const newCategory = {
       id: Date.now().toString(),
-      title: this.name,
+      title: formattedName,
       tasks: [],
       total:0,
       completed: 0,

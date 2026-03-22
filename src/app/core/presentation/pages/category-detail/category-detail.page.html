@@ -4,6 +4,11 @@
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ categoryName | titlecase }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="allCompleted" (click)="deleteCompletedTasks()" color="danger">
+        <ion-icon name="trash" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -32,14 +37,35 @@
 
   <!-- Lista de tareas -->
   <ion-list>
-    <ion-item-sliding *ngFor="let task of filteredTasks; let i = index">
+    <!-- Toggle Todas -->
+    <ion-item *ngIf="tasks.length > 0" (click)="toggleAll()" lines="full" style="--background: #f0f4f8; margin-bottom: 12px; border-radius: 12px;">
+      <ion-icon
+        slot="start"
+        [name]="allCompleted ? 'checkmark-circle' : 'ellipse-outline'"
+        [color]="allCompleted ? 'primary' : 'medium'"
+        style="font-size: 28px; margin-right: 16px;">
+      </ion-icon>
+      <ion-label style="font-weight: 700; color: #0960ac;">
+        {{ allCompleted ? 'Desmarcar Todas' : 'Seleccionar Todas' }}
+      </ion-label>
+    </ion-item>
+
+    <ion-item-sliding *ngFor="let task of filteredTasks; let i = index; trackBy: trackByTask" [ngClass]="{'item-has-done': task.completed}">
+
+      <!-- Opciones deslizar izquierda (Editar) -->
+      <ion-item-options side="start">
+        <ion-item-option color="primary" (click)="editTask(i, task)">
+          <ion-icon slot="icon-only" name="pencil"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
 
       <!-- Item -->
-      <ion-item (click)="toggleTask(task)">
+      <ion-item (click)="toggleTask(i)" lines="none">
         <ion-icon
           slot="start"
           [name]="task.completed ? 'checkmark-circle' : 'ellipse-outline'"
-          [color]="task.completed ? 'success' : 'medium'">
+          [color]="task.completed ? 'success' : 'medium'"
+          style="font-size: 28px; margin-right: 16px;">
         </ion-icon>
         <ion-label [ngClass]="{'done': task.completed}">
           {{ task.title }}

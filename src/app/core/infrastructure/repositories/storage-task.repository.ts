@@ -35,18 +35,14 @@ export class StorageTaskRepository implements TaskRepository {
     return category.tasks;
   }
 
-  async toggleTask(categoryId: string, task: TodoTask): Promise<TodoTask[]> {
+  async toggleTask(categoryId: string, index: number): Promise<TodoTask[]> {
     const categories = await this.getCategories();
     const category = categories.find((c) => c.id === categoryId);
 
-    if (!category) return [];
+    if (!category || !category.tasks[index]) return [];
 
-    const index = category.tasks.findIndex((t) => t.title === task.title);
-    if (index !== -1) {
-      category.tasks[index].completed = !category.tasks[index].completed;
-
-      category.completed = category.tasks.filter((t) => t.completed).length;
-    }
+    category.tasks[index].completed = !category.tasks[index].completed;
+    category.completed = category.tasks.filter((t) => t.completed).length;
 
     await this.storage.set(CATEGORY_KEY, categories);
     return category.tasks;
@@ -63,6 +59,46 @@ export class StorageTaskRepository implements TaskRepository {
 
     category.total = category.tasks.length;
     category.completed = category.tasks.filter((t) => t.completed).length;
+
+    await this.storage.set(CATEGORY_KEY, categories);
+    return category.tasks;
+  }
+  async deleteCompletedTasks(categoryId: string): Promise<TodoTask[]> {
+    const categories = await this.getCategories();
+    const category = categories.find((c) => c.id === categoryId);
+
+    if (!category) return [];
+
+    category.tasks = category.tasks.filter(t => !t.completed);
+    category.total = category.tasks.length;
+    category.completed = 0;
+
+    await this.storage.set(CATEGORY_KEY, categories);
+    return category.tasks;
+  }
+
+  async toggleAllTasks(categoryId: string, completed: boolean): Promise<TodoTask[]> {
+    const categories = await this.getCategories();
+    const category = categories.find((c) => c.id === categoryId);
+
+    if (!category) return [];
+
+    category.tasks.forEach(t => t.completed = completed);
+    category.completed = completed ? category.tasks.length : 0;
+
+    await this.storage.set(CATEGORY_KEY, categories);
+    return category.tasks;
+  }
+
+  async updateTask(categoryId: string, index: number, newTitle: string): Promise<TodoTask[]> {
+    const categories = await this.getCategories();
+    const category = categories.find((c) => c.id === categoryId);
+
+    if (!category) return [];
+
+    if (category.tasks[index]) {
+      category.tasks[index].title = newTitle;
+    }
 
     await this.storage.set(CATEGORY_KEY, categories);
     return category.tasks;

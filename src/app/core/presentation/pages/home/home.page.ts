@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AlertController, IonicModule, ModalController } from '@ionic/angular';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -37,6 +37,7 @@ import { GetCategoriesUseCase } from 'src/app/core/application/category/get-cate
     SearchBarComponent,
   ],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit {
   searchTerm = '';
@@ -49,7 +50,8 @@ export class HomePage implements OnInit {
     private getCategories: GetCategoriesUseCase,
     private addCategory: AddCategoryUseCase,
     private deleteCategoryUC: DeleteCategoryUseCase,
-    private updateCategoryUC: UpdateCategoryUseCase
+    private updateCategoryUC: UpdateCategoryUseCase,
+    private cdr: ChangeDetectorRef
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -66,6 +68,11 @@ export class HomePage implements OnInit {
 
   private async loadCategories() {
     this.categories = await this.getCategories.execute();
+    this.cdr.markForCheck();
+  }
+
+  trackByCategory(index: number, cat: Category): string {
+    return cat.id || cat.title;
   }
 
   get filteredCategories(): Category[] {
@@ -90,8 +97,25 @@ export class HomePage implements OnInit {
 
   async deleteCategory(index: number) {
     const category = this.categories[index];
-    await this.deleteCategoryUC.execute(category.id || '');
-    await this.loadCategories();
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar categoría',
+      message: `¿Estás seguro de que deseas eliminar la categoría "${category.title}"?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: async () => {
+            await this.deleteCategoryUC.execute(category.id || '');
+            await this.loadCategories();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   openCategory(cat: Category) {
@@ -119,7 +143,8 @@ export class HomePage implements OnInit {
           text: SAVE,
           handler: async (data) => {
             if (!data.title.trim()) return false;
-            category.title = data.title.trim();
+            const formattedName = data.title.trim().charAt(0).toUpperCase() + data.title.trim().slice(1);
+            category.title = formattedName;
             await this.updateCategoryUC.execute(category);
             await this.loadCategories();
             return true;

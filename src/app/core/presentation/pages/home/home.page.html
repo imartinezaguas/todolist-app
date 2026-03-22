@@ -1,25 +1,19 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title> Todo-list </ion-title>
+    <ion-title>TODO-LIST</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<app-search-bar
-  [(value)]="searchTerm"
-  placeholder="Buscar categorías...">
-</app-search-bar>
+  <app-search-bar [(value)]="searchTerm" placeholder="Buscar categorías...">
+  </app-search-bar>
 
+  <h2>Categorías</h2>
   <ion-list>
-    <ion-item-sliding *ngFor="let cat of filteredCategories; let i = index">
+    <ion-item-sliding *ngFor="let cat of filteredCategories; let i = index; trackBy: trackByCategory">
       <ion-item (click)="openCategory(cat)">
-        <app-category-card
-          [title]="cat.title"
-          [tasks]="cat.total ?? cat.tasks.length"
-          [completed]="cat.completed"
-          [color]="cat.color"
-          [icon]="cat.icon"
-          (edit)="editCategory(i)">
+        <app-category-card [title]="cat.title" [tasks]="cat.total ?? cat.tasks.length" [completed]="cat.completed"
+          [color]="cat.color" [icon]="cat.icon" (edit)="editCategory(i)">
         </app-category-card>
       </ion-item>
 

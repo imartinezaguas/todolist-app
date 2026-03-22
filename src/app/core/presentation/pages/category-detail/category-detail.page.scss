@@ -1,19 +1,80 @@
 .add-task {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 16px 0;
+  gap: 12px;
+  margin: 16px 0 24px 0;
+  background: #ffffff;
+  padding: 8px 8px 8px 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 
   ion-input {
     flex: 1;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 6px 12px;
+    --padding-start: 0;
+    --color: #2c3338;
+    --placeholder-color: #9a9da0;
+    font-weight: 500;
+    --highlight-color-focused: none;
+    border: none;
+    font-family: 'Manrope', sans-serif;
+  }
+}
+
+h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #2c3338;
+  margin: 24px 0 16px 0;
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+
+  ion-item-sliding {
+    margin-bottom: 16px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.2s ease;
   }
 
+  ion-item-sliding:active {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* mimic reference hover/active state */
+  }
+
+  ion-item {
+    --background: transparent;
+    --border-width: 0;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --min-height: 72px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    color: #2c3338;
+  }
+
+  ion-item-options {
+    border-bottom: none;
+  }
 }
 
 .done {
   text-decoration: line-through;
-  color: gray;
+  color: #596065;
+  font-weight: 600;
+}
+
+/* Make completed item look inactive like reference */
+ion-item-sliding.item-has-done {
+  background: #f0f4f8; /* surface-container-low */
+  opacity: 0.8;
+  box-shadow: none;
+}
+
+ion-searchbar {
+  padding-left: 0;
+  padding-right: 0;
 }

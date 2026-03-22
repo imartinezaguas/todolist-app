@@ -1,16 +1,10 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .category-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  margin: 12px 0;
-  padding: 8px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.icon {
-  font-size: 24px;
+  background: transparent;
+  padding: 16px 0;
+  width: 100%;
 }

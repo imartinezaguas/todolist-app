@@ -1,16 +1,17 @@
-<ion-card [ngStyle]="{'background-color': color + '10'}" class="category-card">
-  <ion-card-content>
-    <div class="header">
-      <ion-icon [name]="icon" class="icon" [style.color]="color"></ion-icon>
-      <h2>{{ title }}</h2>
-            <ion-button fill="clear" size="small" color="medium" (click)="onEdit($event)">
-        <ion-icon name="create-outline"></ion-icon>
-      </ion-button>
+<div class="category-card">
+  <div class="header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <ion-icon [name]="icon" class="icon" [style.color]="'var(--ion-color-'+color+')'" style="font-size: 24px; padding: 10px; background: #f0f4f8; border-radius: 50%;"></ion-icon>
+      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 700; color: #2c3338;">{{ title }}</h2>
     </div>
+    <ion-button fill="clear" size="small" color="medium" (click)="onEdit($event)">
+      <ion-icon name="create-outline"></ion-icon>
+    </ion-button>
+  </div>
 
-    <p>{{ tasks }} tareas</p>
-
-    <ion-progress-bar [value]="progress" [color]="color"></ion-progress-bar>
-    <p>{{ completed }} de {{ tasks }} completadas</p>
-  </ion-card-content>
-</ion-card>
+  <div class="stats" style="margin-top: 16px;">
+    <p style="margin: 0 0 8px 0; font-size: 0.875rem; color: #596065;">{{ tasks }} tareas</p>
+    <ion-progress-bar [value]="tasks === 0 ? 0 : completed / tasks" [color]="color" style="height: 6px; border-radius: 4px; margin-bottom: 8px;"></ion-progress-bar>
+    <p style="margin: 0; font-size: 0.875rem; color: #596065;">{{ completed }} de {{ tasks }} completadas</p>
+  </div>
+</div>
