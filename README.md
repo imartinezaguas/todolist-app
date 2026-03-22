@@ -50,8 +50,8 @@ src/
 Clonar repositorio:
 
 ```bash
-git clone https://github.com/imartinezaguas/todo-list-ionic.git
-cd todo-list-ionic
+git clone https://github.com/imartinezaguas/todolist-app.git
+cd todolist-app
 ```
 
 Instalar dependencias:
@@ -143,29 +143,14 @@ npx http-server ./coverage/todo-list-ionic -o
 
 ## 📸 Capturas
 
-### Home con categorías
+### 🏠 Home — Listado de categorías
 <img src="screenshots/home.png" width="300"/>
 
-### Vista de detalle con tareas
+### ✅ Detalle — Lista de tareas
 <img src="screenshots/2.png" width="300"/>
 
-### Crear nueva categoría
+### ➕ Nueva Categoría
 <img src="screenshots/3.png" width="300"/>
-
-### Barra de progreso completada
-<img src="screenshots/4.png" width="300"/>
-
-### Editar categoría
-<img src="screenshots/5.png" width="300"/>
-
-### Eliminar categoría
-<img src="screenshots/6.png" width="300"/>
-
-### Eliminar tarea
-<img src="screenshots/7.png" width="300"/>
-
-## Buscar tareas
-<img src="screenshots/8.png" width="300"/>
 
 ---
 
