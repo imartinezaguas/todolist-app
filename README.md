@@ -80,7 +80,7 @@ ionic cordova build android --release
 👉 Abrir en **Android Studio** para generar el `.apk`.
 
 📥 Descarga aquí el `.apk`:  
-[➡️ Descargar APK](https://drive.google.com/file/d/1PIIex4Wc7Z79XSWF2tbfMBFoogEYsprB/view?usp=sharing)
+[➡️ Descargar APK](https://drive.google.com/file/d/1Lyr0ITevWJVhcMyNs4YOKGhKYRz-RJES/view?usp=sharing)
 
 ---
 

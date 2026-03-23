@@ -10,7 +10,28 @@ export class StorageCategoryRepository implements CategoryRepository {
 
   async getAll(): Promise<Category[]> {
     const data = await this.storage.get<Category[]>(CATEGORY_KEY);
-    return Array.isArray(data) ? data : [];
+    let categories = Array.isArray(data) ? data : [];
+    
+    let needsUpdate = false;
+    categories = categories.map((cat, index) => {
+      // Fix missing id
+      if (!cat.id) {
+        cat.id = Date.now().toString() + Math.random().toString(36).substring(2, 9) + index;
+        needsUpdate = true;
+      }
+      // Fix missing tasks array
+      if (!cat.tasks) {
+        cat.tasks = [];
+        needsUpdate = true;
+      }
+      return cat;
+    });
+
+    if (needsUpdate) {
+      await this.storage.set(CATEGORY_KEY, categories);
+    }
+
+    return categories;
   }
 
   async add(category: Category): Promise<void> {
