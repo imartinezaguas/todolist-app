@@ -34,7 +34,7 @@ import { ToggleAllTasksUseCase } from 'src/app/core/application/task/toggle-all-
 })
 export class CategoryDetailPage implements OnInit {
   categoryName = '';
-  categoryId ='' ;
+  categoryId = '';
   newTask = '';
   tasks: TodoTask[] = [];
   searchTask = '';
@@ -96,7 +96,6 @@ export class CategoryDetailPage implements OnInit {
       await toast.present();
       return;
     }
-    console.log(this.categoryName, this.newTask.trim())
     const updatedTasks = await this.addTaskUC.execute(this.categoryId, this.newTask.trim());
     this.tasks = updatedTasks;
     this.cdr.markForCheck();
@@ -124,7 +123,7 @@ export class CategoryDetailPage implements OnInit {
           handler: async () => {
             const updatedTasks = await this.deleteTaskUC.execute(this.categoryId, index);
             this.tasks = updatedTasks;
-    this.cdr.markForCheck();
+            this.cdr.markForCheck();
           }
         }
       ]
@@ -158,7 +157,7 @@ export class CategoryDetailPage implements OnInit {
             if (!data.title.trim()) return false;
             const updatedTasks = await this.updateTaskUC.execute(this.categoryId, index, data.title.trim());
             this.tasks = updatedTasks;
-    this.cdr.markForCheck();
+            this.cdr.markForCheck();
             return true;
           },
         },
@@ -185,7 +184,7 @@ export class CategoryDetailPage implements OnInit {
           handler: async () => {
             const updatedTasks = await this.deleteCompletedTasksUC.execute(this.categoryId);
             this.tasks = updatedTasks;
-    this.cdr.markForCheck();
+            this.cdr.markForCheck();
           }
         }
       ]

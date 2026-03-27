@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AlertController, IonicModule, ModalController } from '@ionic/angular';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddCategoryUseCase } from 'src/app/core/application/category/add-category.usecase';
@@ -53,17 +52,15 @@ export class HomePage implements OnInit {
     private updateCategoryUC: UpdateCategoryUseCase,
     private cdr: ChangeDetectorRef
   ) {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        if (this.router.url === HOME) {
-          this.loadCategories();
-        }
-      });
+
+  }
+
+  ionViewWillEnter() {
+    this.loadCategories();
   }
 
   async ngOnInit() {
-    await this.loadCategories();
+
   }
 
   private async loadCategories() {
